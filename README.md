@@ -1,6 +1,12 @@
 # **cpp_result**
 
-Result types with detailed error messages and stack traces.
+A compromise between error codes and exceptions.  Contains result types with detailed error messages and stack traces.
+
+Error codes are the old-school method for error handling.  Error codes are more verbose than exceptions and require the programmer to explicitly handle all points of failure.  Error messages corresponding to error codes are too general and not particularly descriptive.
+
+Exceptions generate more descriptive error messages than error codes, but they're not without problems.  Exceptions break code structure by creating multiple invisible exit points that make code hard to read and inspect.  Exception safety requires RAII, which is not always guaranteed, especially when using C libraries in C++.  Exceptions thrown while modifying invariants (variables with only a few valid states) can result in undefined behavior, regardless of whether the exceptions are caught.  [Writing exception-safe code in C++ is hard.](https://stackoverflow.com/a/1849519)
+
+Result types are improved error codes with exception-like error messages.  As with error codes, result types must be explicitly handled at all points of failure.  As with exceptions, result types contain stack traces and highly descriptive error messages.
 
 ## Build from Source
 
