@@ -12,6 +12,7 @@ build_dir = meson.project_build_root()
 include_dir = root_dir / 'cpp_result'
 src_dir = root_dir / 'src'
 tests_dir = root_dir / 'tests'
+examples_dir = root_dir / 'examples'
 
 # Insert the project version into the version header file
 conf_data = configuration_data()
@@ -29,6 +30,20 @@ lib_cpp_result_headers = files(
     include_dir / 'optional.hpp',
 )
 install_headers(lib_cpp_result_headers, subdir : 'cpp_result')
+
+examples = [
+    'result',
+    'optional',
+]
+
+foreach example_name : examples
+    executable(
+        'example_' + example_name,
+        files(
+            examples_dir / (example_name + '.cpp'),
+        )
+    )
+endforeach
 
 dep_gtest_main = dependency(
     'gtest_main',
