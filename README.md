@@ -41,7 +41,7 @@ brew install gcc
 
 Follow these instructions to install [Meson](https://mesonbuild.com/SimpleStart.html) (C++ meta-build system).
 
-#### Linux (Ubuntu):
+#### Linux (Debian/Ubuntu):
 
 ```bash
 sudo apt install meson ninja build-essential
