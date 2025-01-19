@@ -29,6 +29,16 @@ TEST(error_test, res_error_macro_with_message) {
       RES_ERROR(RES_NEW_ERROR("first test"), "second test").string().size(), 0);
 }
 
+TEST(error_test, res_concat_macro_with_no_message) {
+    ASSERT_GT(
+      RES_CONCAT(RES_NEW_ERROR(""), RES_NEW_ERROR("")).string().size(), 0);
+}
+
+TEST(error_test, res_concat_macro_with_message) {
+    ASSERT_GT(
+      RES_CONCAT(RES_NEW_ERROR("A"), RES_NEW_ERROR("B")).string().size(), 0);
+}
+
 TEST(error_test, error_copy_constructor) {
     std::string message = "This is an error message.";
     res::error_t error{ message };

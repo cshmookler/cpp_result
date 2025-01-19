@@ -9,9 +9,18 @@ int main() {
     auto error =
       RES_NEW_ERROR("This is an example error.  The stack trace begins here.");
 
-    error = RES_TRACE(error); // Annotating traces is optional.
+    // Annotating traces is optional.
+    error = RES_TRACE(error);
 
+    // This trace is annotated with message. New message are appended to the
+    // existing message.
     error = RES_ERROR(error, "Traces can be annotated like this.");
+
+    // New errors are completely independent from other errors.
+    auto other_error = RES_NEW_ERROR("This is another error.");
+
+    // Errors can be concatonated with other errors.
+    error = RES_CONCAT(error, other_error);
 
     std::cout << error.string() << '\n';
 }

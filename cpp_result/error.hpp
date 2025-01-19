@@ -48,6 +48,10 @@
 // Create a new error with a trace.
 #define RES_NEW_ERROR(error) RES_ERROR(res::error_t{ "" }, (error))
 
+// Concatenate two errors.
+#define RES_CONCAT(first_error, second_error)                                  \
+    RES_TRACE(res::error_t{ (first_error).string() + (second_error).string() })
+
 namespace res {
 
 /**
