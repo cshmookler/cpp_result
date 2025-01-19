@@ -35,18 +35,18 @@
 // and line number where this macro is expanded.
 #define RES_TRACE(trace)                                                       \
     res::error_t {                                                             \
-        std::string{ trace } + "\n" + __FILE__ + ":" + __FUNCTION__            \
+        (trace).string() + "\n" + __FILE__ + ":" + __FUNCTION__                \
           + "():" + std::to_string(__LINE__)                                   \
     }
 
 // Append a trace to an error with an additional error message.
 #define RES_ERROR(trace, error)                                                \
     res::error_t {                                                             \
-        RES_TRACE(trace).get() + " -> " + error                                \
+        RES_TRACE(trace).string() + " -> " + (error)                           \
     }
 
 // Create a new error with a trace.
-#define RES_NEW_ERROR(error) RES_ERROR("", error)
+#define RES_NEW_ERROR(error) RES_ERROR(res::error_t{ "" }, (error))
 
 namespace res {
 
@@ -79,14 +79,14 @@ class error_t {
     /**
      * @brief Get a const reference to the stored error message.
      */
-    [[nodiscard]] const std::string& get() const {
+    [[nodiscard]] const std::string& string() const {
         return this->error_;
     }
 
     /**
      * @brief Get a mutable reference to the stored error message.
      */
-    [[nodiscard]] std::string& get() {
+    [[nodiscard]] std::string& string() {
         return this->error_;
     }
 };

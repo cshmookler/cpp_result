@@ -39,21 +39,21 @@ int main() {
     // This operation succeeds.
     auto res = func(5);
     if (res.has_error()) {
-        std::cout << res.error() << '\n';
+        std::cout << res.error().string() << '\n';
         // return 1; // NOTE: You'd normally return here.
     }
 
     // This operation fails.
     res = func(0);
     if (res.has_error()) {
-        std::cout << res.error() << '\n';
+        std::cout << res.error().string() << '\n';
         // return 1; // NOTE: You'd normally return here.
     }
 
     // This operation also fails.
     res = func(50000);
     if (res.has_error()) {
-        std::cout << res.error() << '\n';
+        std::cout << res.error().string() << '\n';
         // return 1; // NOTE: You'd normally return here.
     }
 

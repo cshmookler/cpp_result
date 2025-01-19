@@ -32,6 +32,7 @@ lib_cpp_result_headers = files(
 install_headers(lib_cpp_result_headers, subdir : 'cpp_result')
 
 examples = [
+    'error',
     'result',
     'optional',
 ]

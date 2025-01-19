@@ -41,28 +41,27 @@ namespace res {
  * and an empty string for success.
  */
 class result_t {
-    std::unique_ptr<std::string> error_;
+    std::unique_ptr<error_t> error_;
 
-    static inline const std::string success_message = "Success";
+    static inline const error_t success_error = error_t{ "Success" };
 
   public:
     result_t() {
     }
 
-    result_t(const error_t& error)
-    : error_(std::make_unique<std::string>(error.get())) {
+    result_t(const error_t& error) : error_(std::make_unique<error_t>(error)) {
     }
 
     result_t(error_t&& error)
-    : error_(std::make_unique<std::string>(
-        std::forward<std::string>(std::move(error).get()))) {
+    : error_(
+        std::make_unique<error_t>(std::forward<error_t>(std::move(error)))) {
     }
 
     result_t(const result_t& result) {
         if (result.success()) {
             this->error_ = nullptr;
         } else {
-            this->error_ = std::make_unique<std::string>(*(result.error_));
+            this->error_ = std::make_unique<error_t>(*(result.error_));
         }
     }
     result_t(result_t&&) = default;
@@ -74,7 +73,7 @@ class result_t {
         if (result.success()) {
             this->error_ = nullptr;
         } else {
-            this->error_ = std::make_unique<std::string>(*(result.error_));
+            this->error_ = std::make_unique<error_t>(*(result.error_));
         }
 
         return *this;
@@ -100,9 +99,9 @@ class result_t {
      * @return a copy of the error stored within this result or a
      * generic success message if this result represents success.
      */
-    [[nodiscard]] std::string error() {
+    [[nodiscard]] error_t error() {
         if (this->success()) {
-            return success_message;
+            return success_error;
         }
 
         return *(this->error_);

@@ -16,14 +16,14 @@ int main() {
     // This operation succeeds.
     auto res = func(true);
     if (res.failure()) {
-        std::cout << res.error() << '\n';
+        std::cout << res.error().string() << '\n';
         // return 1; // NOTE: You'd normally return here.
     }
 
     // This operation fails.
     res = func(false);
     if (res.failure()) {
-        std::cout << res.error() << '\n';
+        std::cout << res.error().string() << '\n';
         // return 1; // NOTE: You'd normally return here.
     }
 

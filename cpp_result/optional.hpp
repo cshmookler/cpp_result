@@ -38,20 +38,20 @@ namespace res {
 
 /*
  * @brief An exception thrown when attempting to access a value stored within a
- * syst::optional_t that does not exist.
+ * res::optional_t that does not exist.
  */
 class bad_optional_access_t : public std::exception {
-    std::string error_;
+    error_t error_;
 
   public:
-    bad_optional_access_t(const std::string& error) : error_(error) {
+    bad_optional_access_t(const error_t& error) : error_(error) {
     }
 
-    bad_optional_access_t(std::string&& error) : error_(std::move(error)) {
+    bad_optional_access_t(error_t&& error) : error_(std::move(error)) {
     }
 
     const char* what() const noexcept override {
-        return this->error_.c_str();
+        return this->error_.string().c_str();
     }
 };
 
@@ -62,22 +62,21 @@ class bad_optional_access_t : public std::exception {
 template<typename type_t>
 class optional_t {
     std::unique_ptr<type_t> value_;
-    std::unique_ptr<std::string> error_;
+    std::unique_ptr<error_t> error_;
 
-    static const std::string has_value_message;
+    static const error_t has_value_error;
     static const std::string bad_optional_access_message;
 
   public:
-    // If a syst::optional_t does not contain a value, it is guaranteed to
-    // contain an error.
+    // This object will always contain a value if it does not contain an error.
 
     optional_t(const error_t& error)
-    : value_(nullptr), error_(std::make_unique<std::string>(error.get())) {
+    : value_(nullptr), error_(std::make_unique<error_t>(error)) {
     }
     optional_t(error_t&& error)
     : value_(nullptr)
-    , error_(std::make_unique<std::string>(
-        std::forward<std::string>(std::move(error).get()))) {
+    , error_(
+        std::make_unique<error_t>(std::forward<error_t>(std::move(error)))) {
     }
 
     optional_t(const type_t& value)
@@ -102,13 +101,13 @@ class optional_t {
 
     optional_t& operator=(const error_t& error) {
         this->value_ = nullptr;
-        this->error_ = std::make_unique<std::string>(error.get());
+        this->error_ = std::make_unique<error_t>(error);
         return *this;
     }
     optional_t& operator=(error_t&& error) {
         this->value_ = nullptr;
-        this->error_ = std::make_unique<std::string>(
-          std::forward<std::string>(std::move(error).get()));
+        this->error_ =
+          std::make_unique<error_t>(std::forward<error_t>(std::move(error)));
         return *this;
     }
 
@@ -118,7 +117,7 @@ class optional_t {
             this->error_ = nullptr;
         } else {
             this->value_ = nullptr;
-            this->error_ = std::make_unique<std::string>(*(result.error_));
+            this->error_ = std::make_unique<error_t>(*(result.error_));
         }
     }
     optional_t(optional_t&&) = default;
@@ -133,8 +132,8 @@ class optional_t {
             this->error_ = nullptr;
         } else {
             this->value_ = nullptr;
-            this->error_ = std::make_unique<std::string>(
-              std::forward<type_t>(*(result.error_)));
+            this->error_ = std::make_unique<error_t>(
+              std::forward<error_t>(*(result.error_)));
         }
 
         return *this;
@@ -144,9 +143,8 @@ class optional_t {
 
     [[nodiscard]] const type_t* operator->() const {
         if (! this->has_value()) {
-            throw bad_optional_access_t{
-                RES_ERROR(this->error(), bad_optional_access_message).get()
-            };
+            throw bad_optional_access_t{ RES_ERROR(
+              this->error(), bad_optional_access_message) };
         }
 
         return this->value_.get();
@@ -154,9 +152,8 @@ class optional_t {
 
     [[nodiscard]] type_t* operator->() {
         if (! this->has_value()) {
-            throw bad_optional_access_t{
-                RES_ERROR(this->error(), bad_optional_access_message).get()
-            };
+            throw bad_optional_access_t{ RES_ERROR(
+              this->error(), bad_optional_access_message) };
         }
 
         return this->value_.get();
@@ -196,9 +193,9 @@ class optional_t {
      * @return a copy of the value stored within this object or a generic
      * success message if this object does not contain an error.
      */
-    [[nodiscard]] std::string error() const {
+    [[nodiscard]] error_t error() const {
         if (! this->has_error()) {
-            return has_value_message;
+            return has_value_error;
         }
 
         return *(this->error_);
@@ -206,10 +203,10 @@ class optional_t {
 };
 
 template<typename type_t>
-const std::string optional_t<type_t>::has_value_message = "Has value";
+const error_t optional_t<type_t>::has_value_error = error_t{ "Has value" };
 
 template<typename type_t>
 const std::string optional_t<type_t>::bad_optional_access_message =
-  "Attempted to access a value from a syst::optional_t that does not exist.";
+  "Attempted to access a value from a res::optional_t that does not exist.";
 
 } // namespace res
