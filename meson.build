@@ -28,6 +28,7 @@ lib_cpp_result_headers = files(
     include_dir / 'error.hpp',
     include_dir / 'result.hpp',
     include_dir / 'optional.hpp',
+    include_dir / 'all.hpp',
 )
 install_headers(lib_cpp_result_headers, subdir : 'cpp_result')
 
