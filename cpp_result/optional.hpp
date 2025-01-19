@@ -37,8 +37,8 @@
 namespace res {
 
 /*
- * @brief An exception thrown when attempting to access a value stored within a
- * res::optional_t that does not exist.
+ * @brief An exception thrown when attempting to access a value stored within an
+ * optional_t that does not exist.
  */
 class bad_optional_access_t : public std::exception {
     error_t error_;
@@ -64,12 +64,15 @@ class optional_t {
     std::unique_ptr<type_t> value_;
     std::unique_ptr<error_t> error_;
 
-    static const error_t has_value_error;
-    static const std::string bad_optional_access_message;
+    static inline const error_t has_value_error{ "Has value" };
+    static inline const std::string bad_optional_access_message{
+        "Attempted to access a value from an optional_t that does not exist."
+    };
 
   public:
     // This object will always contain a value if it does not contain an error.
 
+    // Initialize with an error.
     optional_t(const error_t& error)
     : value_(nullptr), error_(std::make_unique<error_t>(error)) {
     }
@@ -78,27 +81,6 @@ class optional_t {
     , error_(
         std::make_unique<error_t>(std::forward<error_t>(std::move(error)))) {
     }
-
-    optional_t(const type_t& value)
-    : value_(std::make_unique<type_t>(value)), error_(nullptr) {
-    }
-    optional_t(type_t&& value)
-    : value_(std::make_unique<type_t>(std::forward<type_t>(std::move(value))))
-    , error_(nullptr) {
-    }
-
-    optional_t& operator=(const type_t& value) {
-        this->value_ = std::make_unique<type_t>(value);
-        this->error_ = nullptr;
-        return *this;
-    }
-    optional_t& operator=(type_t&& value) {
-        this->value_ =
-          std::make_unique<type_t>(std::forward<type_t>(std::move(value)));
-        this->error_ = nullptr;
-        return *this;
-    }
-
     optional_t& operator=(const error_t& error) {
         this->value_ = nullptr;
         this->error_ = std::make_unique<error_t>(error);
@@ -111,34 +93,55 @@ class optional_t {
         return *this;
     }
 
-    optional_t(const optional_t& result) {
-        if (result.has_value()) {
-            this->value_ = std::make_unique<type_t>(*(result.value_));
+    // Initialize with a value.
+    optional_t(const type_t& value)
+    : value_(std::make_unique<type_t>(value)), error_(nullptr) {
+    }
+    optional_t(type_t&& value)
+    : value_(std::make_unique<type_t>(std::forward<type_t>(std::move(value))))
+    , error_(nullptr) {
+    }
+    optional_t& operator=(const type_t& value) {
+        this->value_ = std::make_unique<type_t>(value);
+        this->error_ = nullptr;
+        return *this;
+    }
+    optional_t& operator=(type_t&& value) {
+        this->value_ =
+          std::make_unique<type_t>(std::forward<type_t>(std::move(value)));
+        this->error_ = nullptr;
+        return *this;
+    }
+
+    // Initialize with another optional object.
+    optional_t(const optional_t& optional) {
+        if (optional.has_value()) {
+            this->value_ = std::make_unique<type_t>(*(optional.value_));
             this->error_ = nullptr;
         } else {
             this->value_ = nullptr;
-            this->error_ = std::make_unique<error_t>(*(result.error_));
+            this->error_ = std::make_unique<error_t>(*(optional.error_));
         }
     }
     optional_t(optional_t&&) = default;
-    optional_t& operator=(const optional_t& result) {
-        if (this == &result) {
+    optional_t& operator=(const optional_t& optional) {
+        if (this == &optional) {
             return *this;
         }
 
-        if (result.has_value()) {
-            this->value_ =
-              std::make_unique<type_t>(std::forward<type_t>(*(result.value_)));
+        if (optional.has_value()) {
+            this->value_ = std::make_unique<type_t>(*(optional.value_));
             this->error_ = nullptr;
         } else {
             this->value_ = nullptr;
-            this->error_ = std::make_unique<error_t>(
-              std::forward<error_t>(*(result.error_)));
+            this->error_ = std::make_unique<error_t>(*(optional.error_));
         }
 
         return *this;
     }
     optional_t& operator=(optional_t&&) = default;
+
+    // Destructor
     ~optional_t() = default;
 
     [[nodiscard]] const type_t* operator->() const {
@@ -149,7 +152,6 @@ class optional_t {
 
         return this->value_.get();
     }
-
     [[nodiscard]] type_t* operator->() {
         if (! this->has_value()) {
             throw bad_optional_access_t{ RES_ERROR(
@@ -201,12 +203,5 @@ class optional_t {
         return *(this->error_);
     }
 };
-
-template<typename type_t>
-const error_t optional_t<type_t>::has_value_error = error_t{ "Has value" };
-
-template<typename type_t>
-const std::string optional_t<type_t>::bad_optional_access_message =
-  "Attempted to access a value from a res::optional_t that does not exist.";
 
 } // namespace res

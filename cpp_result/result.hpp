@@ -43,20 +43,22 @@ namespace res {
 class result_t {
     std::unique_ptr<error_t> error_;
 
-    static inline const error_t success_error = error_t{ "Success" };
+    static inline const error_t success_error{ "Success" };
 
   public:
+    // Default construction indicates success.
     result_t() {
     }
 
+    // Initialize with an error.
     result_t(const error_t& error) : error_(std::make_unique<error_t>(error)) {
     }
-
     result_t(error_t&& error)
     : error_(
         std::make_unique<error_t>(std::forward<error_t>(std::move(error)))) {
     }
 
+    // Initialize with another result object.
     result_t(const result_t& result) {
         if (result.success()) {
             this->error_ = nullptr;
@@ -79,6 +81,8 @@ class result_t {
         return *this;
     }
     result_t& operator=(result_t&&) = default;
+
+    // Destructor
     ~result_t() = default;
 
     /**
@@ -111,6 +115,6 @@ class result_t {
 /**
  * @brief A result indicating success.
  */
-inline const result_t success = {};
+inline const result_t success{};
 
 } // namespace res

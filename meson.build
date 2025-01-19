@@ -32,6 +32,7 @@ lib_cpp_result_headers = files(
 install_headers(lib_cpp_result_headers, subdir : 'cpp_result')
 
 examples = [
+    'version',
     'error',
     'result',
     'optional',
@@ -54,7 +55,10 @@ dep_gtest_main = dependency(
 
 if dep_gtest_main.found()
     tests = [
-        'version'
+        'version',
+        'error',
+        'result',
+        'optional',
     ]
 
     foreach test_name : tests

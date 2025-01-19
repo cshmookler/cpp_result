@@ -83,5 +83,5 @@ meson install
 - [X] Create a dedicated error type to distinguish between strings and errors.
 - [X] Create a result type that indicates success or failure.
 - [X] Create an optional type that either contains a value or an error.
-- [ ] Add tests for all methods.
+- [X] Add tests for all methods.
 - [X] Add examples for all types.

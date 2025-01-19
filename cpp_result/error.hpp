@@ -58,21 +58,20 @@ class error_t {
 
   public:
     // All constructors must be explicit so construction is never ambiguous. If
-    // a function returns a res::optional_t<std::string>, then returning a
-    // std::string must never construct a res::error_t unless explicitly casted
-    // to a res::error_t. For example:
+    // a function returns a optional_t<std::string>, then returning a
+    // std::string must never construct a error_t unless explicitly casted
+    // to a error_t. For example:
     //
-    // res::optional_t<std::string> example(bool success) {
+    // optional_t<std::string> example(bool success) {
     //     if (success) {
     //         return "success";
     //     } else {
-    //         return res::error_t("error");
+    //         return error_t("error");
     //     }
     // }
 
     explicit error_t(const std::string& error) : error_(error) {
     }
-
     explicit error_t(std::string&& error) : error_(std::move(error)) {
     }
 
