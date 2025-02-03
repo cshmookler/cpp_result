@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 // Local includes
-#include "../cpp_result/error.hpp"
+#include "../include/error.hpp"
 
 TEST(error_test, res_new_error_macro_with_no_message) {
     ASSERT_GT(RES_NEW_ERROR("").string().size(), 0);

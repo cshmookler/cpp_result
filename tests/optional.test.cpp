@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 // Local includes
-#include "../cpp_result/optional.hpp"
+#include "../include/optional.hpp"
 
 TEST(optional_test, optional_copy_error_constructor) {
     res::error_t error{ "some error" };

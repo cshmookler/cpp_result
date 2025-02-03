@@ -4,7 +4,7 @@
 #include <vector>
 
 // External includes
-#include "../cpp_result/optional.hpp"
+#include "../include/optional.hpp"
 
 res::optional_t<size_t> multiply(size_t lhs, size_t rhs) {
     if (lhs == rhs) {

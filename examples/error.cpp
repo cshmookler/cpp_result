@@ -2,7 +2,7 @@
 #include <iostream>
 
 // External includes
-#include "../cpp_result/error.hpp"
+#include "../include/error.hpp"
 
 int main() {
     // The creation point of an error must be annotated with a message.

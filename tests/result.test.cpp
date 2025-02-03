@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 // Local includes
-#include "../cpp_result/result.hpp"
+#include "../include/result.hpp"
 
 TEST(result_test, result_default_constructor) {
     res::result_t result;

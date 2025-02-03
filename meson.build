@@ -9,7 +9,7 @@ project(
 # Project root and build directories
 root_dir = meson.project_source_root()
 build_dir = meson.project_build_root()
-include_dir = root_dir / 'cpp_result'
+include_dir = root_dir / 'include'
 src_dir = root_dir / 'src'
 tests_dir = root_dir / 'tests'
 examples_dir = root_dir / 'examples'
@@ -19,7 +19,7 @@ conf_data = configuration_data()
 conf_data.set('version', meson.project_version())
 configure_file(
     configuration : conf_data,
-    input : 'cpp_result' / 'version.hpp.in',
+    input : include_dir / 'version.hpp.in',
     output : 'version.hpp',
 )
 

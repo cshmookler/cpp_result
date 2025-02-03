@@ -2,7 +2,7 @@
 #include <iostream>
 
 // External includes
-#include "../cpp_result/result.hpp"
+#include "../include/result.hpp"
 
 res::result_t func(bool value) {
     if (value) {
