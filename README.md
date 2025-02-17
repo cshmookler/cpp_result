@@ -85,3 +85,4 @@ meson install
 - [X] Create an optional type that either contains a value or an error.
 - [X] Add tests for all methods.
 - [X] Add examples for all types.
+- [X] Add Conan integration.
