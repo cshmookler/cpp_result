@@ -6,6 +6,9 @@ from conan import ConanFile
 from conan.tools.meson import Meson, MesonToolchain
 
 
+required_conan_version = ">=2.3.0"
+
+
 class cpp_result(ConanFile):
 
     # Required
@@ -39,7 +42,7 @@ class cpp_result(ConanFile):
         """Get project version from the VERSION file"""
 
         with open("VERSION") as file:
-            self.version = file.readline()
+            self.version = file.readline().strip()
 
     def build_requirements(self):
         """Declare dependencies of the build system"""
@@ -71,3 +74,15 @@ class cpp_result(ConanFile):
         meson.configure()
         meson.build()
         meson.test()
+
+    def package(self):
+        """Install project headers"""
+
+        meson = Meson(self)
+        meson.install()
+
+    def package_info(self):
+        """Package information"""
+
+        self.cpp_info.libs = [self.name]
+        self.cpp_info.includedirs = ["include"]
