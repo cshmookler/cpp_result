@@ -94,7 +94,7 @@ class error_t {
     }
 };
 
-std::ostream& operator<<(std::ostream& ostream, const error_t& error) {
+inline std::ostream& operator<<(std::ostream& ostream, const error_t& error) {
     return (ostream << error.string());
 }
 
