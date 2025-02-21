@@ -22,5 +22,5 @@ int main() {
     // Errors can be concatonated with other errors.
     error = RES_CONCAT(error, other_error);
 
-    std::cout << error.string() << '\n';
+    std::cout << error << '\n';
 }
