@@ -31,19 +31,29 @@
 // Standard includes
 #include <string>
 
+namespace {
+
+/**
+ * @brief Remove the last character in a given string.
+ * The string must be non-empty.
+ */
+std::string& remove_last(std::string& str) {
+    str.pop_back();
+    return str;
+}
+
+} // namespace
+
 // Append a trace to an error. Each trace contains the file name, function name,
 // and line number where this macro is expanded.
 #define RES_TRACE(trace)                                                       \
-    res::error_t {                                                             \
-        (trace).string() + "\n" + __FILE__ + ":" + __FUNCTION__                \
-          + "():" + std::to_string(__LINE__)                                   \
-    }
+    res::error_t{ (trace).string() + __FILE__ + ":" + __FUNCTION__             \
+        + "():" + std::to_string(__LINE__) + "\n" }
 
 // Append a trace to an error with an additional error message.
 #define RES_ERROR(trace, error)                                                \
-    res::error_t {                                                             \
-        RES_TRACE(trace).string() + " -> " + (error)                           \
-    }
+    res::error_t{ remove_last(RES_TRACE(trace).string()) + " -> " + (error)    \
+        + "\n" }
 
 // Create a new error with a trace.
 #define RES_NEW_ERROR(error) RES_ERROR(res::error_t{ "" }, (error))
