@@ -237,3 +237,16 @@ TEST(optional_test, optional_pointer_operator_reference) {
     ASSERT_GT(optional_2.error().string().size(), 0);
     ASSERT_STREQ(optional_2->c_str(), value.c_str());
 }
+
+TEST(optional_test, optional_release) {
+    std::string value = "value";
+
+    res::optional_t<std::string> optional{ value };
+    ASSERT_TRUE(optional.has_value());
+    ASSERT_FALSE(optional.has_error());
+    std::string* released_value = optional.release();
+    ASSERT_EQ(*released_value, value);
+    ASSERT_FALSE(optional.has_value());
+    ASSERT_FALSE(optional.has_error());
+    delete released_value;
+}

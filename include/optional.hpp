@@ -162,6 +162,22 @@ class optional_t {
     }
 
     /**
+     * @brief Releases ownership of the value stored within this object.
+     * NOTE: Use the 'delete' operator to destruct the value.
+     *
+     * @throw bad_optional_access_t if this object does not contain a value.
+     * @return a pointer to the value stored within this object.
+     */
+    [[nodiscard]] type_t* release() {
+        if (! this->has_value()) {
+            throw bad_optional_access_t{ RES_ERROR(
+              this->error(), bad_optional_access_message) };
+        }
+
+        return this->value_.release();
+    }
+
+    /**
      * @return true if this object contains a value and false otherwise.
      */
     [[nodiscard]] bool has_value() const {
