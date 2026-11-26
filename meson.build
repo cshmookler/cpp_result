@@ -17,14 +17,13 @@ examples_dir = root_dir / 'examples'
 # Insert the project version into the version header file
 conf_data = configuration_data()
 conf_data.set('version', meson.project_version())
-configure_file(
+version_h = configure_file(
     configuration : conf_data,
     input : include_dir / 'version.hpp.in',
     output : 'version.hpp',
 )
 
-lib_cpp_result_headers = files(
-    build_dir / 'version.hpp',
+lib_cpp_result_headers = [version_h] + files(
     include_dir / 'error.hpp',
     include_dir / 'result.hpp',
     include_dir / 'optional.hpp',
